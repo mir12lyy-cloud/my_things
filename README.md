@@ -36,11 +36,10 @@ cd my_things
 虽然本仓库主要是我个人学习的集合，但是如果你有任何的改进建议，欢迎提交Issue和Pull Request!
 
 ## 许可
-本项目统一使用 [MIT许可证](./LICENSE.txt)，任何人可以自由使用，保留原作者信息即可。
+本项目统一使用 [MIT许可证](./LICENSE)，任何人可以自由使用，保留原作者信息即可。
 
 ## 联系我
 - 邮箱：huangjinyangyang@hotmail.com
 - QQ：671489684
-- 个人网站：
 - Github：@mir12lyy-cloud
 
