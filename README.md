@@ -12,11 +12,11 @@
 
 |项目合集|编写语言|核心内容|详细文档|状态|
 |:---:|:---:|:---:|:---:|:---:|
-|[算法合集（C实现）](/algorithmC/)|C|用C实现的排序等算法|[README](/algorithmC/README.md)|持续更新中|
+|[算法合集（C实现）](/algorithmC/)|C|用C实现的排序等算法|[README](/algorithmC/README.md)|长期更新中|
 |[高精度数类](/bigNum/)|C++|高精度整数及其计算|[README](/bigNum/README.md)|持续更新中|
-|[数据结构（C实现）](/dataStructureC/)|C|在C下实现的动态数组等数据结构|[README](/dataStructureC/README.md)|持续更新中|
+|[数据结构（C实现）](/dataStructureC/)|C|在C下实现的动态数组等数据结构|[README](/dataStructureC/README.md)|长期更新中|
 |[线性代数库](/linearAlgebra/)|C++|基本矩阵，向量运算，以及数值计算|[README](/linearAlgebra/README.md)|持续更新中|
-|[简单点名器（带GUI）](/selectNames/)|Python|读取班级文件进行指定性别的点名，带日志|[README](/selectNames/README.md)|制作中|
+|[简单点名器（带GUI）](/selectNames/)|Python|读取班级文件进行指定性别的点名，带日志|[README](/selectNames/README.md)|初版完成|
 |...|...|...|...|...|
 
 *可点击项目名称查看项目文件夹，README查看文档*

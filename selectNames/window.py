@@ -60,9 +60,9 @@ def get_output():
     if the_class is None  or the_class.get_data() == 0:
         messagebox.showerror("无法进行导出", "班级实例不存在，请先载入班级文件！")
         return
-    with open('name_ouput.txt', 'w', encoding='utf-8') as outputfile:
+    with open('name_output.txt', 'w', encoding='utf-8') as outputfile:
         the_class.output_data(outputfile)
-    messagebox.showinfo("日志导出", "日志导出完毕，请在根目录中寻找name_ouput.txt")
+    messagebox.showinfo("日志导出", "日志导出完毕，请在根目录中寻找name_output.txt")
 
 def disable_entry():
     if(entry_people_male['state'] == 'normal'):
