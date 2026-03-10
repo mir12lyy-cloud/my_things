@@ -1,63 +1,142 @@
 import tkinter as tk
 from tkinter import font
+from tkinter import filedialog
+from tkinter import messagebox
+import core
 
-selectMain = tk.Tk()
-selectMain.title("简单点名器")
-selectMain.geometry("720x540")
+the_class = None
 
-def load_class_file():
-    pass
+def select_class_file():
+    select_class_path = filedialog.askopenfilename(
+        title="选择你的班级txt文件",
+        filetypes=[("文本文件", "*.txt")]
+    )
+    if select_class_path:
+        entry_path.delete(0, tk.END)
+        entry_path.insert(0, select_class_path)
+
+def init_class_file():
+    global the_class
+    the_class = core.myClass(var_user_path.get())
+    if the_class is None or the_class.get_data() == 0:
+        messagebox.showerror("班级载入失败", "程序未能载入您的班级，原因可能有两个：\n1. 你的班级文件不存在。\n2. 没有给名字打上性别标识符（男b，女g）。")
+    else:
+        messagebox.showinfo("班级载入成功", "班级载入完毕，你可以进行点名了。")
 
 def check_class_file():
-    pass
+    global the_class
+    if the_class is None  or the_class.get_data() == 0:
+        messagebox.showerror("无法进行查询", "班级实例不存在，请先载入班级文件！")
+        return
+    info = the_class.get_data()
+    messagebox.showinfo("班级信息", f"版级一共有 {info[0]} 人。\n有 {info[1]} 名男生， {info[2]} 名女生。")
 
 def select_name():
-    pass
+    global the_class
+    global var_user_final_people
+    if the_class is None  or the_class.get_data() == 0:
+        messagebox.showerror("无法进行点名", "班级实例不存在，请先载入班级文件！")
+        return
+    info = the_class.get_data()
+    if var_user_people.get() > info[0] or var_user_people_female.get() + var_user_people_male.get() > info[0]:
+        messagebox.showerror("无法进行点名", "你点的人太多了，请您稍微减少人数！")
+        return
+    if var_user_people_male.get() > info[1] or var_user_people_female.get() > info[2]:
+        messagebox.showerror("无法进行点名", "班级内的男女生没有那么多！")
+        return
+    if var_user_with_gender.get() == False:
+        get_name = the_class.chosen_name_with_no_gender(var_user_people.get())
+    else:
+        get_name = the_class.chosen_name_with_gender(var_user_people_male.get(), var_user_people_female.get())
+    final_result = ''.join(name + ', ' for name in get_name)
+    var_user_final_people.set(final_result)
+    if var_user_with_gender.get() == False:
+        messagebox.showinfo("点名完成", f"此次点名点了 {var_user_people.get()} 人")
+    else:
+        messagebox.showinfo("点名完成", f"此次点名点了 {var_user_people_male.get()} 男生，{var_user_people_female.get()} 女生")
 
 def get_output():
-    pass
-
-tk.Label(selectMain, text='点名器（可点性别，带日志）', font=('TkDefaultFont', 22)).place(x=175, y=50)
-
-tk.Label(selectMain, text='输入班级文件位置：').place(x=50, y=120)
-tk.Label(selectMain, text='输入你要点的人数：').place(x=50, y=160)
-tk.Label(selectMain, text='输入点的男生人数（不指定性别不用填）：').place(x=50, y=200)
-tk.Label(selectMain, text='输入点的女生人数（不指定性别不用填）：').place(x=50, y=240)
-
-var_user_path = tk.StringVar()
-var_user_people = tk.IntVar()
-var_user_people_male = tk.IntVar()
-var_user_people_female = tk.IntVar()
-
-var_user_selectwithsex = tk.BooleanVar()
-
-entry_path = tk.Entry(selectMain, textvariable=var_user_path)
-entry_path.place(x=360, y=120)
-entry_people = tk.Entry(selectMain, textvariable=var_user_people)
-entry_people.place(x=360, y=160)
-entry_people_male = tk.Entry(selectMain, textvariable=var_user_people_male)
-entry_people_male.place(x=360, y=200)
-entry_people_female = tk.Entry(selectMain, textvariable=var_user_people_female)
-entry_people_female.place(x=360, y=240)
+    global the_class
+    if the_class is None  or the_class.get_data() == 0:
+        messagebox.showerror("无法进行导出", "班级实例不存在，请先载入班级文件！")
+        return
+    with open('name_ouput.txt', 'w', encoding='utf-8') as outputfile:
+        the_class.output_data(outputfile)
+    messagebox.showinfo("日志导出", "日志导出完毕，请在根目录中寻找name_ouput.txt")
 
 def disable_entry():
     if(entry_people_male['state'] == 'normal'):
         entry_people_male.config(state='disabled')
         entry_people_female.config(state='disabled')
+        entry_people.config(state='normal')
     else:
         entry_people_male.config(state='normal')
         entry_people_female.config(state='normal')
+        entry_people.config(state='disabled')
 
-cbtn_comfirm_sex = tk.Checkbutton(selectMain, text='指定性别', variable=var_user_selectwithsex, onvalue=True, offvalue=False, command=disable_entry)
-cbtn_comfirm_sex.place(x=50, y=300)
+selectMain = tk.Tk()
+selectMain.title("简单点名器")
+screen_weight = selectMain.winfo_screenwidth()
+screen_height = selectMain.winfo_screenheight()
+x_p = (screen_weight // 2) - 480
+y_p = (screen_height // 2) - 360
+selectMain.geometry(f"960x720+{x_p}+{y_p}")
+selectMain.resizable(False, False)
 
-btn_load_file = tk.Button(selectMain, text='载入班级文件', command=load_class_file)
-btn_load_file.place(x=60, y=400)
-btn_check_file = tk.Button(selectMain, text='查看班级情况', command=check_class_file)
-btn_check_file.place(x=200, y=400)
-btn_select_name = tk.Button(selectMain, text='点名', command=select_name)
-btn_select_name.place(x=340, y=400)
-btn_get_output = tk.Button(selectMain, text='输出日志', command=get_output)
-btn_get_output.place(x=480, y=400)
+var_user_path = tk.StringVar()
+var_user_people = tk.IntVar(value=1)
+var_user_with_gender = tk.BooleanVar(value=True) 
+var_user_people_male = tk.IntVar(value=1)
+var_user_people_female = tk.IntVar(value=1) 
+var_user_final_people = tk.StringVar()
+
+label_path = tk.Label(selectMain, text="班级文件路径：")
+label_path.grid(row=0, column=0, padx=20, pady=30, sticky="e")
+
+entry_path = tk.Entry(selectMain, textvariable=var_user_path, width=50)
+entry_path.grid(row=0, column=1, padx=10, pady=30)
+
+btn_choose_file = tk.Button(selectMain, text='载入班级文件', command=init_class_file, width=15)
+btn_choose_file.grid(row=0, column=2, padx=20, pady=30)
+
+btn_select_file = tk.Button(selectMain, text='选择班级文件', command=select_class_file, width=15)
+btn_select_file.grid(row=1, column=2, padx=20, pady=30)
+
+check_gender = tk.Checkbutton(
+    selectMain, 
+    text="按性别点名", 
+    variable=var_user_with_gender, 
+    command=disable_entry
+)
+check_gender.grid(row=1, column=1, padx=20, pady=10, sticky="w")
+
+label_people = tk.Label(selectMain, text="点名总人数：")
+label_people.grid(row=2, column=0, padx=20, pady=10, sticky="e")
+entry_people = tk.Entry(selectMain, textvariable=var_user_people, width=20)
+entry_people.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+
+label_male = tk.Label(selectMain, text="男生人数：")
+label_male.grid(row=3, column=0, padx=20, pady=10, sticky="e")
+entry_people_male = tk.Entry(selectMain, textvariable=var_user_people_male, width=20, state="disabled")
+entry_people_male.grid(row=3, column=1, padx=10, pady=10, sticky="w")
+
+label_female = tk.Label(selectMain, text="女生人数：")
+label_female.grid(row=4, column=0, padx=20, pady=10, sticky="e")
+entry_people_female = tk.Entry(selectMain, textvariable=var_user_people_female, width=20, state="disabled")
+entry_people_female.grid(row=4, column=1, padx=10, pady=10, sticky="w")
+
+btn_check_file = tk.Button(selectMain, text='查看班级情况', command=check_class_file, width=15)
+btn_check_file.grid(row=5, column=0, padx=20, pady=20)
+btn_select_name = tk.Button(selectMain, text='开始点名', command=select_name, width=15, bg="#4CAF50", fg="white")
+btn_select_name.grid(row=5, column=1, padx=10, pady=20)
+btn_get_output = tk.Button(selectMain, text='导出点名日志', command=get_output, width=15)
+btn_get_output.grid(row=5, column=2, padx=20, pady=20)
+
+label_result = tk.Label(selectMain, text="点名结果：")
+label_result.grid(row=6, column=0, padx=20, pady=30, sticky="e")
+entry_final = tk.Entry(selectMain, textvariable=var_user_final_people, width=60, font=("微软雅黑", 14))
+entry_final.grid(row=6, column=1, columnspan=2, padx=10, pady=30) 
+
+disable_entry()
 
 selectMain.mainloop()
