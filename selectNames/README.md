@@ -48,7 +48,7 @@ cd selectNames
     python window.py
     ```
 
-- **如果你需要观看源码，修改源码，或者嵌入源码，则可以在IDE中打开 `core.py` 和 `window.py`。**
+- **如果你需要观看源码，修改源码，或者嵌入源码，则可以在IDE中打开 `core.py` 和 `window.py`。**  
     ![Code](./example/the_code.png)
 
 - **`/example` 文件夹只是示例用的图片，不影响实际使用。**
