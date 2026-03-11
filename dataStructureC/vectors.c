@@ -166,9 +166,9 @@ void pop_back(type##_vector* aVector){\
 
 #define Vector_with_object(type) \
 typedef struct{ \
-    type* data_; \
-    type* elem_end_; \
-    type* end_; \
+    type** data_; \
+    type** elem_end_; \
+    type** end_; \
 }object_##type##_vector; \
 object_##type##_vector creatVector(const size_t size){ \
     size_t proportion_ = (size + NORMAL_SIZE - 1) / NORMAL_SIZE; \
@@ -176,7 +176,7 @@ object_##type##_vector creatVector(const size_t size){ \
     if(!proportion_) capacity = NORMAL_SIZE; \
     else capacity = proportion_ * NORMAL_SIZE; \
     object_##type##_vector returnVector; \
-    returnVector.data_ = malloc(capacity * sizeof(type)); \
+    returnVector.data_ = (type**)malloc(capacity * sizeof(type*)); \
     if(returnVector.data_ == NULL){ \
         printf("Fail.\n"); \
         returnVector.elem_end_ = NULL; \
@@ -218,7 +218,7 @@ void reserve(object_##type##_vector* aVector, const size_t capacity){\
     size_t newsize = getSize(aVector);\
     if(getCapacity(aVector) >= capacity) return;\
     size_t alloc = ((capacity + NORMAL_SIZE - 1) / NORMAL_SIZE) * NORMAL_SIZE;\
-    type* newto = realloc(aVector -> data_, alloc * sizeof(type));\
+    type** newto = (type**)realloc(aVector -> data_, alloc * sizeof(type*));\
     if(newto == NULL){\
         printf("Fail to reserve.\n");\
         return;\

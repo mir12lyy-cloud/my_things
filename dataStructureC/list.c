@@ -93,7 +93,7 @@ size_t getSize(type##_list* bList){\
 
 #define List_with_object(type) \
 typedef struct type##_list{ \
-    type data; \
+    type* data; \
     struct type##_list *prev; \
     struct type##_list *next; \
 }type##_list; \
@@ -116,7 +116,7 @@ void destroy_list(type##_list** bList){\
     } \
     *bList = NULL; \
 }\
-type##_list* push_back(type##_list** lList, type value){ \
+type##_list* push_back(type##_list** lList, type* value){ \
     assert(bList != NULL && *bList != NULL); \
     type##_list* eList = (type##_list*)malloc(sizeof(type##_list)); \
     assert(eList != NULL); \
@@ -125,7 +125,7 @@ type##_list* push_back(type##_list** lList, type value){ \
     eList -> next = NULL; \
     return eList; \
 } \ 
-void push_front(type##_list** bList, type value){ \
+void push_front(type##_list** bList, type* value){ \
     assert(bList != NULL && *bList != NULL); \
     type##_list* nList = (type##_list*)malloc(sizeof(type##_list)); \
     assert(nList != NULL); \
