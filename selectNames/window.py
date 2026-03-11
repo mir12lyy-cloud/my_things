@@ -19,6 +19,7 @@ def init_class_file():
     global the_class
     the_class = core.myClass(var_user_path.get())
     if the_class is None or the_class.get_data() == 0:
+        the_class = None
         messagebox.showerror("班级载入失败", "程序未能载入您的班级，原因可能有两个：\n1. 你的班级文件不存在。\n2. 没有给名字打上性别标识符（男b，女g）。")
     else:
         messagebox.showinfo("班级载入成功", "班级载入完毕，你可以进行点名了。")
