@@ -41,8 +41,8 @@ cd selectNames
 - **注：如果只是使用这个点名器，直接下载`点名器.exe`即可。**
 
 3. **打开EXE**  
-    本程序已经打包好了EXE文件，打开 `点名器.exe` 即可上手使用。
-    ![Exe](./example/the_exe.png)  
+    本程序已经打包好了EXE文件，打开 `点名器.exe` 即可上手使用。  
+    ![Exe](./example/the_exe.png)    
     **注：如果你是Mac/Liunx用户，则请您直接启动`window.py`。**  
     ```bash
     python window.py
