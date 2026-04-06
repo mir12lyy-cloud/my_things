@@ -11,12 +11,12 @@
     8.All in all, you have six functions to build a matrix.
     9.Other features will come soon.
     10.The matrix is based on 0-indexed.
-    11.Split() based on [left, right).
+    11.Most of functions based on [left, right).
     12.Assign() can only be used to assign the matrix built by default constructor.
     13.Inner pow() is O(log n), you can use it to compute the power. But actually is introduced to compute norm.
     14.If you think it is troublesome to build identity matrix, you can use getE().
     15.Now the matrix and vector move to the linerAlgebra namespace, the pow() move into the extraFunc namespace. Please mind it.
-    16.The subMatrix serves as a span for a matrix. So it's operations is limit. If you want full operations, get Matrix not a sub Matrix.*/
+    16.The subMatrix serves as a span for a matrix. So it's operations is limit. If you want full operations, get Matrix not a sub Matrix.(Now it's lock.)*/
     
 /*Versions Note:
   0.5: 1. Could build matrix from init number, or a matrix.
@@ -82,7 +82,7 @@
   1.12.5-C 1. Now can get block of a Matrix. The splitMatrix() turn to the getBlock().
   1.12.6-C 1. Some minor change in Vectors.
   1.12.7-C 1. Some locked features.
-  1.13-C 1. Finally have getQR() (But without the Matrix_view, the function isn't elegant in my imagination.)*/
+  1.13-C 1. Finally have getQR() (But without the Matrix_view, the function isn't elegant in my imagination. But the error less than 1e-18, accpetable.)*/
 
 #include "algFunc.hpp"
 

@@ -151,11 +151,21 @@ namespace linearAlgebra{
         return result;
     }
 
-    /*template<typename T>
-    std::vector<Matrix<long double>> getPQR(const Matrix<T>& A){
+    template<typename T>
+    std::vector<Matrix<long double>> getPQR(const Matrix<T>& A, long long eps = 1e-9){
         std::vector<Matrix<long double>> result(3);
+        size_t m = A.getRow(), n = A.getCol();
+        result[0] = Matrix<long long>(n, true, 1.0);
+        result[1] = Matrix<long long>(m, true, 1.0);
+        result[2] = Matrix<long long>(m, n);
+        fillMatrix(A, result[2]);
+        std::vector<long double> c(n);
+        for(size_t i = 0; i < n; i++) c[i] = result[2].getColVectorNorm(i);
+        for(size_t i = 0; i < n; i++){
+            for(size_t i = 1; i < n; i++)
+        }
         return result;
-    }*/
+    }
 
     template<typename T>
     std::vector<Matrix<long double>> getPLU(const Matrix<T>& A, long double eps = 1e-9){
