@@ -13,9 +13,8 @@
 |项目合集|编写语言|核心内容|详细文档|状态|
 |:---:|:---:|:---:|:---:|:---:|
 |[算法合集（C实现）](/algorithmC/)|C|用C实现的排序等算法|[README](/algorithmC/README.md)|长期更新中|
-|[高精度数类](/bigNum/)|C++|高精度整数及其计算|[README](/bigNum/README.md)|持续更新中|
 |[数据结构（C实现）](/dataStructureC/)|C|在C下实现的动态数组等数据结构|[README](/dataStructureC/README.md)|长期更新中|
-|[线性代数库](/linearAlgebra/)|C++|基本矩阵，向量运算，以及数值计算|[README](/linearAlgebra/README.md)|持续更新中|
+|[数学库](/my_math/)|C++|包括几何，线性代数，高精度数，分数等的实现|[README](/my_math//README.md)|持续更新中|
 |[简单点名器（带GUI）](/selectNames/)|Python|读取班级文件进行指定性别的点名，带日志|[README](/selectNames/README.md)|初版完成|
 |...|...|...|...|...|
 
@@ -43,3 +42,7 @@ cd my_things
 - QQ：671489684
 - Github：@mir12lyy-cloud
 
+## 更新记录
+- 2026-04-06 重新编排了文件。（中间一段时间写算法题去了，没有管理这个仓库。）
+- 2026-03-11 成功编写完点名器初版，并且上传。
+- 2026-03-08 初始化仓库，上传了一些代码
