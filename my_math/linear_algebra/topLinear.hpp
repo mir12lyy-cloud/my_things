@@ -87,5 +87,4 @@
 #include "algFunc.hpp"
 
 #ifdef _FUN_TIME  //If you want to enable it, define the _FUN_TIME.
-#include "funFunc.hpp"
 #endif

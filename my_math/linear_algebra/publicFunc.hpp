@@ -3,7 +3,7 @@
 #include "CRVectors.hpp"
 #include "Matrix.hpp"
 
-namespace linearAlgebra{
+namespace mymath{
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
     colVector<T> getColVector(const Matrix<T>& A, size_t col) {
         colVector<T> result(A.getRow());

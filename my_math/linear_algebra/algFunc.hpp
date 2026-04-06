@@ -3,7 +3,7 @@
 #include "Matrix.hpp"
 #include "publicFunc.hpp"
 
-namespace linearAlgebra{
+namespace mymath{
     template<typename T1, typename T2>
     void fillMatrix(const Matrix<T1>& A, Matrix<T2>& B){
         if(A.getCol() != B.getCol() || A.getRow() != B.getRow()) throw std::invalid_argument("Invalid");

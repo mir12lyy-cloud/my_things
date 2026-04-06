@@ -9,7 +9,7 @@
 #include "extraFunc.hpp"
 
 
-namespace linearAlgebra{
+namespace mymath{
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
     class Matrix final {
     public:

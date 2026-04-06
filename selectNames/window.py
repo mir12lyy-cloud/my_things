@@ -1,11 +1,14 @@
+# Some include moudles.
 import tkinter as tk
 from tkinter import font
 from tkinter import filedialog
 from tkinter import messagebox
 import core
 
+# A single class, just could select one class.
 the_class = None
 
+# The button to select class file function.
 def select_class_file():
     select_class_path = filedialog.askopenfilename(
         title="选择你的班级txt文件",
@@ -15,6 +18,7 @@ def select_class_file():
         entry_path.delete(0, tk.END)
         entry_path.insert(0, select_class_path)
 
+# The button to initialize class file.
 def init_class_file():
     global the_class
     the_class = core.myClass(var_user_path.get())
@@ -24,6 +28,7 @@ def init_class_file():
     else:
         messagebox.showinfo("班级载入成功", "班级载入完毕，你可以进行点名了。")
 
+# The button to get information about a class.
 def check_class_file():
     global the_class
     if the_class is None  or the_class.get_data() == 0:
@@ -32,6 +37,7 @@ def check_class_file():
     info = the_class.get_data()
     messagebox.showinfo("班级信息", f"版级一共有 {info[0]} 人。\n有 {info[1]} 名男生， {info[2]} 名女生。")
 
+# The button to select names and write result to the entry.
 def select_name():
     global the_class
     global var_user_final_people
@@ -56,6 +62,7 @@ def select_name():
     else:
         messagebox.showinfo("点名完成", f"此次点名点了 {var_user_people_male.get()} 男生，{var_user_people_female.get()} 女生")
 
+# The button to get output log.
 def get_output():
     global the_class
     if the_class is None  or the_class.get_data() == 0:
@@ -65,6 +72,7 @@ def get_output():
         the_class.output_data(outputfile)
     messagebox.showinfo("日志导出", "日志导出完毕，请在根目录中寻找name_output.txt")
 
+# The button to change whether choose name with gender or not.
 def disable_entry():
     if(entry_people_male['state'] == 'normal'):
         entry_people_male.config(state='disabled')
@@ -75,6 +83,7 @@ def disable_entry():
         entry_people_female.config(state='normal')
         entry_people.config(state='disabled')
 
+# The main window.
 selectMain = tk.Tk()
 selectMain.title("简单点名器")
 screen_weight = selectMain.winfo_screenwidth()
@@ -84,6 +93,7 @@ y_p = (screen_height // 2) - 360
 selectMain.geometry(f"960x720+{x_p}+{y_p}")
 selectMain.resizable(False, False)
 
+# Some vars in choosing name.
 var_user_path = tk.StringVar()
 var_user_people = tk.IntVar(value=1)
 var_user_with_gender = tk.BooleanVar(value=True) 
@@ -91,8 +101,10 @@ var_user_people_male = tk.IntVar(value=1)
 var_user_people_female = tk.IntVar(value=1) 
 var_user_final_people = tk.StringVar()
 
+# Wiogets about selecting names.
 label_path = tk.Label(selectMain, text="班级文件路径：")
 label_path.grid(row=0, column=0, padx=20, pady=30, sticky="e")
+
 
 entry_path = tk.Entry(selectMain, textvariable=var_user_path, width=50)
 entry_path.grid(row=0, column=1, padx=10, pady=30)
