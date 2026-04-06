@@ -5,7 +5,7 @@
 #include<compare>
 #include<exception>
 
-namespace mymath{
+namespace my_math{
 	template<std::integral T>
 	class fract final{
 	public:

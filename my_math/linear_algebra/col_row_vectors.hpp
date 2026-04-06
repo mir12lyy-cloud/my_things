@@ -6,9 +6,9 @@
 #include<iostream>
 #include<numeric>
 #include<algorithm> //Necessary headers.
-#include "extraFunc.hpp"
+#include "extra_func.hpp"
 
-namespace mymath{
+namespace my_math{
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
     class rowVector final{
     public:

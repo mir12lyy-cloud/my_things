@@ -3,7 +3,7 @@
 #include<cmath>
 #include<type_traits>
 
-namespace mymath::extrafunc{ // Extra functions. Use for compute in other functions.
+namespace my_math::extrafunc{ // Extra functions. Use for compute in other functions.
     template<typename T, typename = std::enable_if_t<std::is_integral_v<T>, T>>
     T pow(T a, size_t b, size_t mod = 1) {
         if (!a) return 0;

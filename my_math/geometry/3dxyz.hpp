@@ -3,7 +3,7 @@
 #include<iostream>
 #include<format>
 
-namespace mymath{
+namespace my_math{
   template<typename T>
   struct Point{T x, y, z;};
 

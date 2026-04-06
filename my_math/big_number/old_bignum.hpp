@@ -7,7 +7,7 @@
 #include<optional>
 #include<bit>
 
-namespace mynum {
+namespace my_math {
 static inline constexpr unsigned long long normal_size = 10000;
 namespace extra_num{
 static inline constexpr unsigned long long g = 3;

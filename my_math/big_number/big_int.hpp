@@ -5,7 +5,7 @@
 #include<compare>
 #include<iostream>
 
-namespace mymath{
+namespace my_math{
 	namespace some_constant_number{
 		static constexpr unsigned long long num_p1 = 119ULL * (1ULL << 23ULL) + 1;
 		static constexpr unsigned long long num_p2 = 479ULL * (1ULL << 21ULL) + 1;

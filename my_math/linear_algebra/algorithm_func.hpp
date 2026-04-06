@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Matrix.hpp"
-#include "publicFunc.hpp"
+#include "matrix.hpp"
+#include "public_func.hpp"
 
-namespace mymath{
+namespace my_math{
     template<typename T1, typename T2>
     void fillMatrix(const Matrix<T1>& A, Matrix<T2>& B){
         if(A.getCol() != B.getCol() || A.getRow() != B.getRow()) throw std::invalid_argument("Invalid");

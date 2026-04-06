@@ -84,7 +84,7 @@
   1.12.7-C 1. Some locked features.
   1.13-C 1. Finally have getQR() (But without the Matrix_view, the function isn't elegant in my imagination. But the error less than 1e-18, accpetable.)*/
 
-#include "algFunc.hpp"
+#include "algorithm_func.hpp"
 
 #ifdef _FUN_TIME  //If you want to enable it, define the _FUN_TIME.
 #endif

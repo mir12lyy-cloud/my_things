@@ -1,9 +1,9 @@
 #pragma once
 
-#include "CRVectors.hpp"
-#include "Matrix.hpp"
+#include "col_row_vectors.hpp"
+#include "matrix.hpp"
 
-namespace mymath{
+namespace my_math{
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
     colVector<T> getColVector(const Matrix<T>& A, size_t col) {
         colVector<T> result(A.getRow());
