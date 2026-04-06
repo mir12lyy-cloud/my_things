@@ -157,7 +157,7 @@ auto mat2 = getQR(myMatrix); //进行QR分解
 ...
 
 ## 贡献
-这个点名器是我的一个小工具，如果你有任何的改进建议，欢迎提交Issue和Pull Request!
+这个库主要记载自己学线性代数的过程，如果你有任何的改进建议，欢迎提交Issue和Pull Request!
 
 ## 许可
 本项目使用 [MIT许可证](/LICENSE)，任何人可以自由使用，保留原作者信息即可。
