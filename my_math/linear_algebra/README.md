@@ -65,7 +65,7 @@ include_directories(项目路径)
 #include "top_linear.hpp"
 #include <iostream>
 int main(){
-    my_math::Matrix<int> a_matrix(3, 3, 3);
+    my_math::matrix<int> a_matrix(3, 3, 3);
     std::cout << a_matrix << "\n";
 }
 ```
@@ -76,16 +76,16 @@ int main(){
 #include "top_linear.hpp"
 #include <iostream>
 int main(){
-    my_math::Matrix<int> myMatrix(3ULL, 3, {1, 3, 2, 2, 0, 3, 4, 1, 1});
+    my_math::matrix<int> myMatrix(3ULL, 3, {1, 3, 2, 2, 0, 3, 4, 1, 1});
     std::cout << my_math::det(myMatrix) << "\n";
     std::cout << myMatrix << "\n";
     std::cout << my_math::transpose(myMatrix) << "\n";
     std::cout << myMatrix.at(0, 0) << "\n";
-    my_math::Matrix B = my_math::basicGaussianElimination(myMatrix);
+    my_math::matrix B = my_math::basic_baussian_elimination(myMatrix);
     std::cout << B << "\n";
-    std::cout << myMatrix.childrenMatrix({0, 1}, {0, 2}) << "\n";
-    std::cout << my_math::getInverse(myMatrix) << "\n";
-    for(const auto& i : my_math::getPLU(myMatrix)) std::cout << i << "\n";
+    std::cout << myMatrix.children_matrix({0, 1}, {0, 2}) << "\n";
+    std::cout << my_math::get_inverse(myMatrix) << "\n";
+    for(const auto& i : my_math::get_PLU(myMatrix)) std::cout << i << "\n";
 }
 ```
 **输出**
@@ -122,36 +122,36 @@ int main(){
 ## 功能特性
 1. **矩阵定义和功能**
 ```C++
-my_math::Matrix<int> mat1 //默认构造
-my_math::Matrix<int> mat2(3, 2) //构造一个3 * 2的矩阵，不填充值
-my_math::Matrix<int> mat3(3, 2, 3) //构造一个3 * 2的矩阵，填充值3
-my_math::Matrix<int> mat4(3, 2, {1, 2, 3}) //构造一个3 * 2矩阵，填充1,2,3，之后全部填充0
-my_math::Matrix<int> mat5(3, false, 3); //构造一个3 * 3的非对角矩阵，填充3.
-my_math::Matrix<int> mat6(3, {1, 2, 3}); //构造一个对角矩阵，对角线填充1, 2, 3.
+my_math::matrix<int> mat1 //默认构造
+my_math::matrix<int> mat2(3, 2) //构造一个3 * 2的矩阵，不填充值
+my_math::matrix<int> mat3(3, 2, 3) //构造一个3 * 2的矩阵，填充值3
+my_math::matrix<int> mat4(3, 2, {1, 2, 3}) //构造一个3 * 2矩阵，填充1,2,3，之后全部填充0
+my_math::matrix<int> mat5(3, false, 3); //构造一个3 * 3的非对角矩阵，填充3.
+my_math::matrix<int> mat6(3, {1, 2, 3}); //构造一个对角矩阵，对角线填充1, 2, 3.
 mat1.assign(3, 2, 3) //分配mat1为3 * 2矩阵，填充3。
 auto mat = mat2 + mat3; //矩阵加法
 //...
 ```
 2. **向量定义和运算**
 ```C++
-my_math::rowVector<int> vec1(3, {1, 2, 3}); //定义行向量[1, 2, 3]；
-my_math::colVector<int> vec2(3, {1, 2, 3}); //定义列向量
+my_math::row_vector<int> vec1(3, {1, 2, 3}); //定义行向量[1, 2, 3]；
+my_math::col_vector<int> vec2(3, {1, 2, 3}); //定义列向量
 int dot = vec1 * vec2; //向量数乘。
-my_math::Matrix<int> mat1 = vec2 * vec1; //向量的矩阵乘。
+my_math::matrix<int> mat1 = vec2 * vec1; //向量的矩阵乘。
 ```
 
 3. **矩阵的数值算法**
 ```C++
-my_math::Matrix<int> myMatrix(3ULL, 3, {1, 3, 2, 2, 0, 3, 4, 1, 1});
+my_math::matrix<int> myMatrix(3ULL, 3, {1, 3, 2, 2, 0, 3, 4, 1, 1});
 double det1 = det(myMatrix); //求行列式
-auto mat2 = getQR(myMatrix); //进行QR分解 
+auto mat2 = get_QR(myMatrix); //进行QR分解 
 ```
 
 **其他的可以自行翻阅源代码.hpp，不再讲述。**
 
 ## 未来的目标：
-1. 重载运算符>>，以支持`std::cin`输入。
-2. 进行命名和函数上的重构，统一命名风格。
+1. 重载运算符>>，以支持`std::cin`输入。（现在部分支持）
+2. 进行命名和函数上的重构，统一命名风格。(基本完成)
 3. 拟引入矩阵视图`my_math::matrix_view`，优化一些算法的实现。
 4. 引入SVD奇异值分解。
 ...
