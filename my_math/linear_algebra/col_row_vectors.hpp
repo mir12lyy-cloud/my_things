@@ -5,69 +5,82 @@
 #include<type_traits>
 #include<iostream>
 #include<numeric>
+#include<initializer_list>
 #include<algorithm> //Necessary headers.
 #include "extra_func.hpp"
 
 namespace my_math{
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
-    class rowVector final{
+    class row_vector final{
     public:
-        rowVector() : rowVectorSize(0) , vec(0){};
-        rowVector(size_t s, const T init = T{0}) : rowVectorSize(s), vec(s, init){}
-        rowVector(const std::vector<T> &init) : rowVectorSize(init.size()), vec(init.size(), 0){
+        row_vector() : row_vector_size(0) , vec(0), default_init(true){};
+        row_vector(std::initializer_list<T> list) : row_vector_size(list.size()), vec(list) {}
+        row_vector(size_t s, const T init = T{0}) : row_vector_size(s), vec(s, init){}
+        row_vector(const std::vector<T> &init) : row_vector_size(init.size()), vec(init.size(), 0){
             for(size_t i = 0; i < init.size(); i++) vec[i] = init[i];
         }
         void fill(T init = T{0}){std::fill(vec.begin(), vec.end(), init);}
+        void assign(size_t s, const T init = T{0}) {
+            if(!default_init) throw std::invalid_argument("A initialized vector can't be assign again!")
+            vec.assign(s, init); default_init = false;
+        }
+        void assign(std::initializer_list<T> list) {
+            if(!default_init) throw std::invalid_argument("A initialized vector can't be assign again!")
+            vec.assign(list); default_init = false;
+        }
+
+        T& operator()(size_t idx) {return vec[idx];}
+        const T& operator()(size_t idx) const {return vec[idx];}
         T& operator[](size_t idx) {return vec[idx];}
         const T& operator[](size_t idx) const {return vec[idx];}
         T& at(size_t idx){
-            if(idx >= rowVectorSize) throw std::out_of_range("Out of the Vector!");
+            if(idx >= row_vector_size) throw std::out_of_range("Out of the Vector!");
             return vec[idx];
         }
         const T& at(size_t idx) const{
-            if(idx >= rowVectorSize) throw std::out_of_range("Out of the Vector!");
+            if(idx >= row_vector_size) throw std::out_of_range("Out of the Vector!");
             return vec[idx];
         }
-        size_t getSize() const{return rowVectorSize;}
-        bool operator==(const rowVector& B){
-            if(B.getSize() != rowVectorSize) return false;
-            for(size_t i = 0; i < rowVectorSize; i++){
+        size_t get_size() const{return row_vector_size;}
+        bool operator==(const row_vector& B){
+            if(B.get_size() != row_vector_size) return false;
+            for(size_t i = 0; i < row_vector_size; i++){
                 if(B.at(i) != vec[i]) return false;
             }
             return true;
         }
-        bool operator!=(const rowVector& B){
-            if(B.getSize() != rowVectorSize) return true;
-            for(size_t i = 0; i < rowVectorSize; i++){
+        bool operator!=(const row_vector& B){
+            if(B.get_size() != row_vector_size) return true;
+            for(size_t i = 0; i < row_vector_size; i++){
                 if(B.at(i) != vec[i]) return true;
             }
             return false;
         }
-        rowVector& operator+=(const rowVector& B){
-            if(B.getSize() != rowVectorSize) throw std::invalid_argument("Not matched.");
-            for(size_t i = 0; i < rowVectorSize; i++) vec[i] += B.at(i);
+        row_vector& operator+=(const row_vector& B){
+            if(B.get_size() != row_vector_size) throw std::invalid_argument("Not matched.");
+            for(size_t i = 0; i < row_vector_size; i++) vec[i] += B.at(i);
             return *this;
         }
-        rowVector& operator-=(const rowVector& B){
-            if(B.getSize() != rowVectorSize) throw std::invalid_argument("Not matched.");
-            for(size_t i = 0; i < rowVectorSize; i++) vec[i] -= B.at(i);
+        row_vector& operator-=(const row_vector& B){
+            if(B.get_size() != row_vector_size) throw std::invalid_argument("Not matched.");
+            for(size_t i = 0; i < row_vector_size; i++) vec[i] -= B.at(i);
             return *this;
         }
-        rowVector& operator*=(const T B){
+        row_vector& operator*=(const T B){
             for(auto &i : vec) i *= B;
             return *this;
         }
-        rowVector& operator/=(const T B){
+        row_vector& operator/=(const T B){
             if(B == T{0}) throw std::invalid_argument("Divsion by zero.");
             for(auto &i : vec) i /= B;
             return *this;
         }
-        rowVector& operator%=(const T B){
+        row_vector& operator%=(const T B){
             static_assert(std::is_integral_v<T>);
             for(auto &i : vec) i %= B;
             return *this;
         }
-        long double getNorm(size_t L = 2){
+        long double get_norm(size_t L = 2){
             long double result = 0.0;
             if(L == 1){
                 for(const auto &i : vec) result += std::abs(i);
@@ -76,75 +89,88 @@ namespace my_math{
             for(const auto &i : vec) result += extraFunc::pow(static_cast<long double>(std::abs(i)), L);
             return std::pow(result, (1.0 / static_cast<long double>(L)));
         }
-        T getInfNorm() const{
+        T get_inf_norm() const{
             T result = vec[0];
             for(const auto& i : vec) result = std::max(result, i);
             return result;
         }
     private:
-        size_t rowVectorSize;
+        bool default_init = false;
+        size_t row_vector_size;
         std::vector<T> vec;
     };
 
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
-    class colVector final{
+    class col_vector final{
     public:
-        colVector() : colVectorSize(0) , vec(0){};
-        colVector(size_t s, const T init = T{0}) : colVectorSize(s), vec(s, init){}
-        colVector(const std::vector<T> &init) : colVectorSize(init.size()), vec(init.size()){
+        col_vector() : col_vector_size(0) , vec(0), default_init(true){};
+        col_vector(std::initializer_list<T> list) : col_vector_size(list.size()), vec(list) {}
+        col_vector(size_t s, const T init = T{0}) : col_vector_size(s), vec(s, init){}
+        col_vector(const std::vector<T> &init) : col_vector_size(init.size()), vec(init.size()){
             for(size_t i = 0; i < init.size(); i++) vec[i] = init[i];
         }
         void fill(T init = T{0}){std::fill(vec.begin(), vec.end(), init);}
+        void assign(size_t s, const T init = T{0}) {
+            if(!default_init) throw std::invalid_argument("A initialized vector can't be assign again!")
+            vec.assign(s, init); default_init = false;
+        }
+        void assign(std::initializer_list<T> list) {
+            if(!default_init) throw std::invalid_argument("A initialized vector can't be assign again!")
+            vec.assign(list); default_init = false;
+        }
+        
+        T& operator()(size_t idx) {return vec[idx];}
+        const T& operator()(size_t idx) const {return vec[idx];}
         T& operator[](size_t idx) {return vec[idx];}
         const T& operator[](size_t idx) const {return vec[idx];}
         T& at(size_t idx){
-            if(idx >= colVectorSize) throw std::out_of_range("Out of the Vector!");
+            if(idx >= col_vector_size) throw std::out_of_range("Out of the Vector!");
             return vec[idx];
         }
         const T& at(size_t idx) const{
-            if(idx >= colVectorSize) throw std::out_of_range("Out of the Vector!");
+            if(idx >= col_vector_size) throw std::out_of_range("Out of the Vector!");
             return vec[idx];
         }
-        size_t getSize() const{return colVectorSize;}
-        bool operator==(const colVector& B){
-            if(B.getSize() != colVectorSize) return false;
-            for(size_t i = 0; i < colVectorSize; i++){
+        size_t get_size() const{return col_vector_size;}
+        bool operator==(const col_vector& B){
+            if(B.get_size() != col_vector_size) return false;
+            for(size_t i = 0; i < col_vector_size; i++){
                 if(B.at(i) != vec[i]) return false;
             }
             return true;
         }
-        bool operator!=(const colVector& B){
-            if(B.getSize() != colVectorSize) return true;
-            for(size_t i = 0; i < colVectorSize; i++){
+        bool operator!=(const col_vector& B){
+            if(B.get_size() != col_vector_size) return true;
+            for(size_t i = 0; i < col_vector_size; i++){
                 if(B.at(i) != vec[i]) return true;
             }
             return false;
         }
-        colVector& operator+=(const colVector& B){
-            if(B.getSize() != colVectorSize) throw std::invalid_argument("Not matched.");
-            for(size_t i = 0; i < colVectorSize; i++) vec[i] += B.at(i);
+        col_vector& operator+=(const col_vector& B){
+            if(B.get_size() != col_vector_size) throw std::invalid_argument("Not matched.");
+            for(size_t i = 0; i < col_vector_size; i++) vec[i] += B.at(i);
             return *this;
         }
-        colVector& operator-=(const colVector& B){
-            if(B.getSize() != colVectorSize) throw std::invalid_argument("Not matched.");
-            for(size_t i = 0; i < colVectorSize; i++) vec[i] -= B.at(i);
+        col_vector& operator-=(const col_vector& B){
+            if(B.get_size() != col_vector_size) throw std::invalid_argument("Not matched.");
+            for(size_t i = 0; i < col_vector_size; i++) vec[i] -= B.at(i);
             return *this;
         }
-        colVector& operator*=(const T B){
+        col_vector& operator*=(const T B){
             for(auto &i : vec) i *= B;
             return *this;
         }
-        colVector& operator/=(const T B){
+        col_vector& operator/=(const T B){
             if(B == T{0}) throw std::invalid_argument("Divsion by zero.");
             for(auto &i : vec) i /= B;
             return *this;
         }
-        colVector& operator%=(const T B){
+        col_vector& operator%=(const T B){
             static_assert(std::is_integral_v<T>);
             for(auto &i : vec) i %= B;
             return *this;
         }
-        long double getNorm(size_t L = 2){
+        long double get_norm(size_t L = 2){
             long double result = 0;
             if(L == 1){
                 for(const auto &i : vec) result += std::abs(i);
@@ -153,166 +179,179 @@ namespace my_math{
             for(const auto &i : vec) result += extraFunc::pow(static_cast<long double>(std::abs(i)), L);
             return std::pow(result, (1.0 / static_cast<long double>(L)));
         }
-        T getInfNorm() const{
+        T get_inf_norm() const{
             T result = vec[0];
             for(const auto& i : vec) result = std::max(result, i);
             return result;
         }
     private:
-        size_t colVectorSize;
+        bool default_init = false;
+        size_t col_vector_size;
         std::vector<T> vec;
     };
 
     template<typename T>
-    std::ostream& operator<<(std::ostream& os, const colVector<T>& A) {
-        for (size_t i = 0; i < A.getSize(); i++) os << A.at(i) << "\n";
+    std::istream& operator>>(std::istream& os, col_vector<T>& A) {
+        for (size_t i = 0; i < A.get_size(); i++) is >> A.at(i);
+        return is;
+    }
+
+    template<typename T>
+    std::istream& operator>>(std::istream& os, row_vector<T>& A) {
+        for (size_t i = 0; i < A.get_size(); i++) is >> A.at(i);
+        return is;
+    }
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, const col_vector<T>& A) {
+        for (size_t i = 0; i < A.get_size(); i++) os << A.at(i) << "\n";
         return os;
     }
 
     template<typename T>
-    std::ostream& operator<<(std::ostream& os, const rowVector<T>& A) {
-        for (size_t i = 0; i < A.getSize(); i++) os << A.at(i) << " ";
+    std::ostream& operator<<(std::ostream& os, const row_vector<T>& A) {
+        for (size_t i = 0; i < A.get_size(); i++) os << A.at(i) << " ";
         return os;
     }
 
     template<typename T>
-    colVector<T> operator+(const colVector<T>& A, const colVector<T>& B){
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("No matched.");
-        colVector<T> result(A.getSize(), 0.0);
-        for(size_t i = 0; i < A.getSize(); i++) result.at(i) = A.at(i) + B.at(i);
+    col_vector<T> operator+(const col_vector<T>& A, const col_vector<T>& B){
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("No matched.");
+        col_vector<T> result(A.get_size(), 0.0);
+        for(size_t i = 0; i < A.get_size(); i++) result.at(i) = A.at(i) + B.at(i);
         return result;
     }
 
     template<typename T>
-    colVector<T> operator-(const colVector<T>& A, const colVector<T>& B){
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("No matched.");
-        colVector<T> result(A.getSize(), 0.0);
-        for(size_t i = 0; i < A.getSize(); i++) result.at(i) = A.at(i) - B.at(i);
+    col_vector<T> operator-(const col_vector<T>& A, const col_vector<T>& B){
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("No matched.");
+        col_vector<T> result(A.get_size(), 0.0);
+        for(size_t i = 0; i < A.get_size(); i++) result.at(i) = A.at(i) - B.at(i);
         return result;
     }
 
     template<typename T>
-    rowVector<T> operator+(const rowVector<T>& A, const rowVector<T>& B){
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("No matched.");
-        rowVector<T> result(A.getSize(), 0.0);
-        for(size_t i = 0; i < A.getSize(); i++) result.at(i) = A.at(i) + B.at(i);
+    row_vector<T> operator+(const row_vector<T>& A, const row_vector<T>& B){
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("No matched.");
+        row_vector<T> result(A.get_size(), 0.0);
+        for(size_t i = 0; i < A.get_size(); i++) result.at(i) = A.at(i) + B.at(i);
         return result;
     }
 
     template<typename T>
-    rowVector<T> operator-(const rowVector<T>& A, const rowVector<T>& B){
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("No matched.");
-        rowVector<T> result(A.getSize(), 0.0);
-        for(size_t i = 0; i < A.getSize(); i++) result.at(i) = A.at(i) - B.at(i);
+    row_vector<T> operator-(const row_vector<T>& A, const row_vector<T>& B){
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("No matched.");
+        row_vector<T> result(A.get_size(), 0.0);
+        for(size_t i = 0; i < A.get_size(); i++) result.at(i) = A.at(i) - B.at(i);
         return result;
     }
 
     template<typename T>
-    colVector<T> operator*(colVector<T> A, T B){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) *= B;
+    col_vector<T> operator*(col_vector<T> A, T B){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) *= B;
         return A;
     }
 
     template<typename T>
-    colVector<T> operator/(colVector<T> A, T B){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) /= B;
+    col_vector<T> operator/(col_vector<T> A, T B){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) /= B;
         return A;
     }
 
     template<typename T, typename = std::enable_if_t<std::is_integral_v<T>, T>>
-    colVector<T> operator%(colVector<T> A, T B){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) %= B;
+    col_vector<T> operator%(col_vector<T> A, T B){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) %= B;
         return A;
     }
 
     template<typename T>
-    colVector<T> operator*(T B, colVector<T> A){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) *= B;
+    col_vector<T> operator*(T B, col_vector<T> A){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) *= B;
         return A;
     }
 
     template<typename T>
-    colVector<T> operator/(T B, colVector<T> A){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) /= B;
+    col_vector<T> operator/(T B, col_vector<T> A){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) /= B;
         return A;
     }
 
     template<typename T>
-    colVector<T> operator%(T B, colVector<T> A){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) %= B;
+    col_vector<T> operator%(T B, col_vector<T> A){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) %= B;
         return A;
     }
 
     template<typename T>
-    rowVector<T> operator*(rowVector<T> A, T B){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) *= B;
+    row_vector<T> operator*(row_vector<T> A, T B){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) *= B;
         return A;
     }
 
     template<typename T>
-    rowVector<T> operator/(rowVector<T> A, T B){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) /= B;
+    row_vector<T> operator/(row_vector<T> A, T B){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) /= B;
         return A;
     }
 
     template<typename T, typename = std::enable_if_t<std::is_integral_v<T>, T>>
-    rowVector<T> operator%(rowVector<T> A, T B){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) %= B;
+    row_vector<T> operator%(row_vector<T> A, T B){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) %= B;
         return A;
     }
 
     template<typename T>
-    rowVector<T> operator*(T B, rowVector<T> A){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) *= B;
+    row_vector<T> operator*(T B, row_vector<T> A){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) *= B;
         return A;
     }
 
     template<typename T>
-    rowVector<T> operator/(T B, rowVector<T> A){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) /= B;
+    row_vector<T> operator/(T B, row_vector<T> A){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) /= B;
         return A;
     }
 
     template<typename T>
-    rowVector<T> operator%(T B, rowVector<T> A){
-        for(size_t i = 0; i < A.getSize(); i++) A.at(i) %= B;
+    row_vector<T> operator%(T B, row_vector<T> A){
+        for(size_t i = 0; i < A.get_size(); i++) A.at(i) %= B;
         return A;
     }
 
     template<typename T>
-    T operator*(const colVector<T>& A, const colVector<T>& B){
+    T operator*(const col_vector<T>& A, const col_vector<T>& B){
         T result = T{0};
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("Not matched.");
-        for(size_t i = 0; i < A.getSize(); i++) result += A.at(i) * B.at(i);
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("Not matched.");
+        for(size_t i = 0; i < A.get_size(); i++) result += A.at(i) * B.at(i);
         return result;
     }
 
     template<typename T>
-    T operator*(const rowVector<T>& A, const rowVector<T>& B) {
+    T operator*(const row_vector<T>& A, const row_vector<T>& B) {
         T result = T{0};
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("Not matched.");
-        for(size_t i = 0; i < A.getSize(); i++) result += A.at(i) * B.at(i);
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("Not matched.");
+        for(size_t i = 0; i < A.get_size(); i++) result += A.at(i) * B.at(i);
         return result;
     }
 
     template<typename T>
-    T operator*(const rowVector<T>& A, const colVector<T>& B){
+    T operator*(const row_vector<T>& A, const col_vector<T>& B){
         T result = T{0};
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("Not matched.");
-        for(size_t i = 0; i < A.getSize(); i++) result += A.at(i) * B.at(i);
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("Not matched.");
+        for(size_t i = 0; i < A.get_size(); i++) result += A.at(i) * B.at(i);
         return result;
     }
     template<typename T>
-    colVector<T> transpose(const rowVector<T>& A){
-        colVector<T> result(A.getSize());
-        for (size_t i = 0; i < A.getSize(); i++) result.at(i) = A.at(i);
+    col_vector<T> transpose(const row_vector<T>& A){
+        col_vector<T> result(A.get_size());
+        for (size_t i = 0; i < A.get_size(); i++) result.at(i) = A.at(i);
         return result;
     }
 
     template<typename T>
-    rowVector<T> transpose(const colVector<T>& A){
-        rowVector<T> result(A.getSize());
-        for (size_t i = 0; i < A.getSize(); i++) result.at(i) = A.at(i);
+    row_vector<T> transpose(const col_vector<T>& A){
+        row_vector<T> result(A.get_size());
+        for (size_t i = 0; i < A.get_size(); i++) result.at(i) = A.at(i);
         return result;
     }
 }

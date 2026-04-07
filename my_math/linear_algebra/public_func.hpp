@@ -5,59 +5,41 @@
 
 namespace my_math{
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
-    colVector<T> getColVector(const Matrix<T>& A, size_t col) {
-        colVector<T> result(A.getRow());
-        for (size_t i = 0; i < A.getRow(); i++) result.at(i) = A.at(i, col);
+    col_vector<T> get_col_vector(const matrix<T>& A, size_t col) {
+        col_vector<T> result(A.get_row());
+        for (size_t i = 0; i < A.get_row(); i++) result.at(i) = A.at(i, col);
             return result;
     }
     template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>, T>>
-    rowVector<T> getRowVector(const Matrix<T>& A, size_t row){
-        rowVector<T> result(A.getCol());
-        for (size_t i = 0; i < A.getCol(); i++) result.at(i) = A.at(row, i);
+    row_vector<T> get_row_vector(const matrix<T>& A, size_t row){
+        row_vector<T> result(A.get_col());
+        for (size_t i = 0; i < A.get_col(); i++) result.at(i) = A.at(row, i);
         return result;
     }
     template<typename T>
-    colVector<T> operator*(const Matrix<T>& A, const colVector<T>& B){
-        if(A.getCol() != B.getSize()) throw std::out_of_range("Invalid");
-        colVector<T> C = colVector<T>(A.getRow());
-        for (size_t i = 0; i < A.getRow(); i++) {
-            for (size_t j = 0; j < B.getSize(); j++) C.at(i) += A.at(i, j) * B.at(j);
+    col_vector<T> operator*(const matrix<T>& A, const col_vector<T>& B){
+        if(A.get_col() != B.get_size()) throw std::out_of_range("Invalid");
+        col_vector<T> C = col_vector<T>(A.get_row());
+        for (size_t i = 0; i < A.get_row(); i++) {
+            for (size_t j = 0; j < B.get_size(); j++) C.at(i) += A.at(i, j) * B.at(j);
         }
         return C;
     }
     template<typename T>
-    rowVector<T> operator*(const rowVector<T>& A, const Matrix<T>& B){
-        if(A.getSize() != B.getRow()) throw std::out_of_range("Invalid");
-        rowVector<T> C = rowVector<T>(B.getCol());
-        for (size_t i = 0; i < B.getRow(); i++) {
-            for (size_t j = 0; j < A.getSize(); j++) C.at(i) += A.at(j) * B.at(i, j);
-        }
-        return C;
-    }
-    /*template<typename T>
-    colVector<T> operator*(const subMatrix<T>& A, const colVector<T>& B){
-        if(A.getCol() != B.getSize()) throw std::out_of_range("Invalid");
-        colVector<T> C = colVector<T>(A.getRow());
-        for (size_t i = 0; i < A.getRow(); i++) {
-            for (size_t j = 0; j < B.getSize(); j++) C.at(i) += A.at(i, j) * B.at(j);
+    row_vector<T> operator*(const row_vector<T>& A, const matrix<T>& B){
+        if(A.get_size() != B.get_row()) throw std::out_of_range("Invalid");
+        row_vector<T> C = row_vector<T>(B.get_col());
+        for (size_t i = 0; i < B.get_row(); i++) {
+            for (size_t j = 0; j < A.get_size(); j++) C.at(i) += A.at(j) * B.at(i, j);
         }
         return C;
     }
     template<typename T>
-    rowVector<T> operator*(const rowVector<T>& A, const subMatrix<T>& B){
-        if(A.getSize() != B.getRow()) throw std::out_of_range("Invalid");
-        rowVector<T> C = rowVector<T>(B.getCol());
-        for (size_t i = 0; i < B.getRow(); i++) {
-            for (size_t j = 0; j < A.getSize(); j++) C.at(i) += A.at(j) * B.at(i, j);
-        }
-        return C;
-    }*/
-    template<typename T>
-    Matrix<T> operator*(const colVector<T>& A, const rowVector<T>& B){
-        if(A.getSize() != B.getSize()) throw std::invalid_argument("Not matched.");
-        Matrix<T> result(A.getSize(), B.getSize(), 0);
-        for (size_t i = 0; i < A.getSize(); i++) {
-            for (size_t j = 0; j < B.getSize(); j++) result.at(i, j) = A.at(i) * B.at(j);
+    matrix<T> operator*(const col_vector<T>& A, const row_vector<T>& B){
+        if(A.get_size() != B.get_size()) throw std::invalid_argument("Not matched.");
+        matrix<T> result(A.get_size(), B.get_size(), 0);
+        for (size_t i = 0; i < A.get_size(); i++) {
+            for (size_t j = 0; j < B.get_size(); j++) result.at(i, j) = A.at(i) * B.at(j);
         }
         return result;
     }
